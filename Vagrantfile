@@ -69,6 +69,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # end
 
   config.vm.provider "virtualbox" do |vb|
+    # Custom name
+    vb.name = "dev-vagrant"
+
     # Display the VirtualBox GUI when booting the machine
     vb.gui = false
   
