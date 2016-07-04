@@ -6,8 +6,9 @@
 
  shift
 
- if (( $# ))
- then gem install $@
+ if (( $# )); then
+    rvm gemset use global
+    gem install $@
  fi
 
  rvm cleanup all

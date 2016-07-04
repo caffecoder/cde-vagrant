@@ -5,14 +5,20 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
-Vagrant.configure(2) do |config|
+
+# Specify Vagrant version and Vagrant API version
+Vagrant.require_version ">= 1.8.4"
+VAGRANTFILE_API_VERSION = "2"
+
+# Create and configure the VM(s)
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/xenial64"
 
   config.vm.provision :shell, path: "dev_vagrant/prepare_env.sh", privileged: true
   config.vm.provision :shell, path: "dev_vagrant/install-rvm.sh", args: "stable", privileged: false
@@ -48,7 +54,7 @@ Vagrant.configure(2) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
-  config.vm.synced_folder ".", "/home/vagrant/dev", type: "nfs"
+  config.vm.synced_folder ".", "/home/ubuntu/dev", type: "nfs"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -63,6 +69,9 @@ Vagrant.configure(2) do |config|
   # end
 
   config.vm.provider "virtualbox" do |vb|
+    # Custom name
+    vb.name = "dev-vagrant"
+
     # Display the VirtualBox GUI when booting the machine
     vb.gui = false
   
