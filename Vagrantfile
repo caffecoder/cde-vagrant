@@ -53,7 +53,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
-  config.vm.synced_folder '.', '/home/ubuntu/dev', type: 'nfs'
+  config.vm.synced_folder '.', '/home/ubuntu/dev',
+    type: 'nfs', nfs_version: 3, nfs_udp: true
+    # type: 'nfs', nfs_version: 4, nfs_udp: false
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
