@@ -46,7 +46,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.network :private_network, ip: '192.168.5.2'
 
-
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
@@ -61,13 +60,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
 
   config.vm.provider 'virtualbox' do |vb|
-    # Custom name
     vb.name = 'cde-vagrant'
 
-    # Display the VirtualBox GUI when booting the machine
+    vb.linked_clone = true
     vb.gui = false
-  
-    # Customize the amount of memory on the VM:
     vb.memory = '1024'
+    vb.cpus = 2
   end
 end
