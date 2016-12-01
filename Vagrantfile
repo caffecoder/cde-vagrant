@@ -67,4 +67,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.memory = '1024'
     vb.cpus = 2
   end
+
+  # See: https://github.com/mhallin/vagrant-notify-forwarder
+  config.notify_forwarder.port = 22020
 end
