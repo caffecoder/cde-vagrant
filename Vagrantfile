@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = 'ubuntu/xenial64'
 
-  # path_prefix = 'https://raw.githubusercontent.com/caffecoder/cde-vagrant/master/dev_vagrant'
+  # path_prefix = 'https://raw.githubusercontent.com/xcdr/cde-vagrant/master/dev_vagrant'
   path_prefix = 'dev_vagrant'
 
   config.vm.provision :shell, path: "#{path_prefix}/prepare_env.sh", privileged: true
