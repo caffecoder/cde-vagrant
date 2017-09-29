@@ -7,8 +7,8 @@
 # you're doing.
 
 # Specify Vagrant version and Vagrant API version
-Vagrant.require_version '>= 1.8.5'
-VAGRANTFILE_API_VERSION = '2'
+Vagrant.require_version '>= 1.9.7'
+VAGRANTFILE_API_VERSION = '2'.freeze
 
 # Create and configure the VM(s)
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -16,17 +16,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = 'ubuntu/xenial64'
-
   # path_prefix = 'https://raw.githubusercontent.com/xcdr/cde-vagrant/master/dev_vagrant'
   path_prefix = 'dev_vagrant'
 
   config.vm.provision :shell, path: "#{path_prefix}/prepare_env.sh", privileged: true
-  config.vm.provision :shell, path: "#{path_prefix}/install-postgresql.sh", privileged: true
-  config.vm.provision :shell, path: "#{path_prefix}/install-rvm.sh", args: 'stable', privileged: false
-  config.vm.provision :shell, path: "#{path_prefix}/install-ruby.sh", args: '2.3.0 bundler', privileged: false
+  # config.vm.provision :shell, path: "#{path_prefix}/install-postgresql.sh", privileged: true
+  # config.vm.provision :shell, path: "#{path_prefix}/install-rvm.sh", args: 'stable', privileged: false
+  # config.vm.provision :shell, path: "#{path_prefix}/install-ruby.sh", args: '2.4.1 bundler', privileged: false
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -44,7 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
 
-  config.vm.network :private_network, ip: '192.168.5.2'
+  config.vm.network :private_network, ip: '10.255.255.2'
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -52,22 +48,49 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
-  config.vm.synced_folder '.', '/home/ubuntu/dev',
-    type: 'nfs', nfs_version: 3, nfs_udp: true
-    # type: 'nfs', nfs_version: 4, nfs_udp: false
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  config.vm.synced_folder '.', '/home/vagrant/dev', type: 'nfs', nfs_version: 3, nfs_udp: false
+
+  # if Vagrant::Util::Platform.linux?
+  #   config.vm.synced_folder '.', '/home/vagrant/dev', type: 'nfs', nfs_version: 4, nfs_udp: false
+  # else
+  #   config.vm.synced_folder '.', '/home/vagrant/dev', type: 'nfs', nfs_version: 3, nfs_udp: true
+  # end
+
+  config.vm.box = 'debian/stretch64' # available for virtualbox, libvirt, lxc
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
 
-  config.vm.provider 'virtualbox' do |vb|
-    vb.name = 'cde-vagrant'
+  config.vm.provider :libvirt do |box|
+    box.driver = 'kvm'
+    box.cpus = 2
+    box.memory = '1024'
+  end
 
-    vb.linked_clone = true
-    vb.gui = false
-    vb.memory = '1024'
-    vb.cpus = 2
+  config.vm.provider :virtualbox do |box|
+    box.cpus = 2
+    box.memory = '1024'
+
+    box.linked_clone = true
+    box.gui = false
+
+    box.name = 'cde-vagrant'
   end
 
   # See: https://github.com/mhallin/vagrant-notify-forwarder
-  config.notify_forwarder.port = 22020
+  if Vagrant.has_plugin?('vagrant-notify-forwarder')
+    config.notify_forwarder.port = 22020
+  else
+    puts 'vagrant-notify-forwarder is not installed!'
+  end
+
+  # See: https://github.com/devopsgroup-io/vagrant-hostmanager
+  if Vagrant.has_plugin?('vagrant-hostmanager')
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+  else
+    puts 'vagrant-hostmanager is not installed!'
+  end
 end
