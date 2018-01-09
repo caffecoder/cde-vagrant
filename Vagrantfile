@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, path: "#{path_prefix}/prepare_env.sh", privileged: true
   # config.vm.provision :shell, path: "#{path_prefix}/install-postgresql.sh", privileged: true
   # config.vm.provision :shell, path: "#{path_prefix}/install-rvm.sh", args: 'stable', privileged: false
-  # config.vm.provision :shell, path: "#{path_prefix}/install-ruby.sh", args: '2.4.1 bundler', privileged: false
+  # config.vm.provision :shell, path: "#{path_prefix}/install-ruby.sh", args: '2.4.3 bundler', privileged: false
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
